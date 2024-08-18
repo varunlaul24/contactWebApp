@@ -71,4 +71,8 @@ export class ListComponent implements OnInit {
   clearSelectedContact() {
     this.selectedContact = null;
   }
+
+  outsideClick(event: MouseEvent){
+    this.selectedContact = null;
+  }
 }

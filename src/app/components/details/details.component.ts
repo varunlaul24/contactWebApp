@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-detail',
@@ -7,9 +7,9 @@ import { Component, Input } from '@angular/core';
 })
 export class DetailsComponent{
   @Input() contact: any;
+  @Output() close = new EventEmitter();
 
-  constructor() {}
-
-  
-
+  closeDetails(contact: any){
+    this.close.emit(contact)
+  }
 }
