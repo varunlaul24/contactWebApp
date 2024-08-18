@@ -8,7 +8,7 @@ import { ContactService } from 'src/app/services/contact.service';
 })
 export class ListComponent implements OnInit {
   groupedContacts: { [key: string]: any[] } = {};
-  alphabets: string[] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  alphabets: string[] = [];
   searchTerm: string = '';
   contacts: any[] = [];
   filteredContacts: any[] = [];
@@ -18,11 +18,19 @@ export class ListComponent implements OnInit {
 
   ngOnInit(): void {
     this.contactService.getContacts().subscribe((data: any[]) => {
+      this.alphabets = this.alphabetsAZ();
       this.contacts = data;
       this.filteredContacts = this.contacts;
       const sortedContacts = this.sortContacts(this.contacts);
       this.groupedContacts = this.groupContactsByAlphabet(sortedContacts);
     });
+  }
+
+  alphabetsAZ(): string[] {
+    for (let i = 65; i <= 90; i++) {
+      this.alphabets.push(String.fromCharCode(i));
+    }
+    return this.alphabets
   }
 
   sortContacts(contacts: any[]): any[] {
