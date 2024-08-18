@@ -1,0 +1,53 @@
+<div class="container mx-auto flex">
+  <div class="sidebar w-1/4">
+    <div class="search-container mb-4">
+      <input
+        type="text"
+        placeholder="Search it!"
+        [(ngModel)]="searchTerm"
+        (input)="filterContacts()"
+        class="w-full p-2 border rounded"
+      />
+    </div>
+    <ul class="mb-4">
+      <li *ngFor="let letter of alphabets">
+        <a href="#{{ letter }}" class="block">{{ letter }}</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="contacts w-3/4">
+    <h2 class="text-2xl mb-4">Contacts List</h2>
+    <div *ngFor="let group of groupedContacts | keyvalue">
+      <h3
+        *ngIf="!searchTerm"
+        id="{{ group.key }}"
+        class="text-xl font-semibold"
+      >
+        {{ group.key }}
+      </h3>
+      <ul class="mb-4">
+        <ng-container *ngFor="let contact of group.value">
+          <li *ngIf="filteredContacts.includes(contact)" class="mb-2">
+            <a
+              (click)="selectContact(contact)"
+              class="cursor-pointer text-blue-600 hover:underline"
+              >{{ contact.name }}</a
+            >
+          </li>
+        </ng-container>
+      </ul>
+    </div>
+  </div>
+
+  <div class="contact-details w-1/4 ml-4" *ngIf="selectedContact">
+    
+    <app-detail [contact]="selectedContact"></app-detail>
+    <button
+      (click)="clearSelectedContact()"
+      class="mb-4 p-2 bg-red-500 text-white rounded"
+    >
+      Close
+    </button>
+  </div>
+</div>
