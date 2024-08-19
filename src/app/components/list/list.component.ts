@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { People } from 'src/app/models/people.model';
 import { ContactService } from 'src/app/services/contact.service';
 
 @Component({
@@ -6,21 +7,22 @@ import { ContactService } from 'src/app/services/contact.service';
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css'],
 })
+
 export class ListComponent implements OnInit {
-  groupedContacts: { [key: string]: any[] } = {};
+  groupedContacts: { [key: string]: People[] } = {};
   alphabets: string[] = [];
   searchTerm: string = '';
-  contacts: any[] = [];
-  filteredContacts: any[] = [];
-  selectedContact: any = null;
+  contacts: People[] = [];
+  filteredContacts: People[] = [];
+  selectedContact: People | null = null;
 
   constructor(private contactService: ContactService) {}
 
   ngOnInit(): void {
-    this.contactService.getContacts().subscribe((data: any[]) => {
-      this.alphabets = this.alphabetsAZ();
+    this.alphabets = this.alphabetsAZ();
+    this.contactService.getAllContacts().subscribe((data: People[]) => {
       this.contacts = data;
-      this.filteredContacts = this.contacts;
+      this.filteredContacts = data;
       const sortedContacts = this.sortContacts(this.contacts);
       this.groupedContacts = this.groupContactsByAlphabet(sortedContacts);
     });
@@ -33,11 +35,10 @@ export class ListComponent implements OnInit {
     return this.alphabets
   }
 
-  sortContacts(contacts: any[]): any[] {
+  sortContacts(contacts: People[]): People[] {
     return contacts.sort((x, y) => {
       const nameA = x.name.toLowerCase();
       const nameB = y.name.toLowerCase();
-
       if (nameA < nameB) {
         return -1;
       }
@@ -48,9 +49,8 @@ export class ListComponent implements OnInit {
     });
   }
 
-  groupContactsByAlphabet(contacts: any[]): { [key: string]: any[] } {
-    const groupedContacts: { [key: string]: any[] } = {};
-
+  groupContactsByAlphabet(contacts: People[]): { [key: string]: People[] } {
+    const groupedContacts: { [key: string]: People[] } = {};
     contacts.forEach((contact) => {
       const firstLetter = contact.name[0].toUpperCase();
       if (!groupedContacts[firstLetter]) {
@@ -72,7 +72,7 @@ export class ListComponent implements OnInit {
     }
   }
 
-  selectContact(contact: any) {
+  selectContact(contact: People) {
     this.selectedContact = contact;
   }
 
